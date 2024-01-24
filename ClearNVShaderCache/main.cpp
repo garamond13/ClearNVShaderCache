@@ -4,6 +4,8 @@
 #include <filesystem>
 #include <iostream>
 
+static constexpr int VERSION[3]{ 1, 0, 0 };
+
 struct Human_readable
 {
 	std::uintmax_t size{};
@@ -51,6 +53,7 @@ static void remove(std::filesystem::path& path)
 
 int main()
 {
+	std::cout << "ClearNVShaderCache version " << VERSION[0] << '.' << VERSION[1] << '.' << VERSION[2] << '\n';
 	PWSTR known_folder_path;
 	SHGetKnownFolderPath(FOLDERID_LocalAppData, KF_FLAG_DEFAULT, nullptr, &known_folder_path);
 	std::filesystem::path path{ std::move(known_folder_path) };

@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <iostream>
 
-static constexpr int VERSION[3]{ 1, 0, 0 };
+static constexpr int VERSION[3]{ 1, 0, 1 };
 
 struct Human_readable
 {
@@ -20,7 +20,7 @@ private:
 	}
 };
 
-static void remove(std::filesystem::path& path)
+static void clear(std::filesystem::path& path)
 {
 	uintmax_t size_before{};
 	uintmax_t size_after{};
@@ -45,7 +45,7 @@ static void remove(std::filesystem::path& path)
 		for (auto& tmp : std::filesystem::recursive_directory_iterator(path))
 			size_after += std::filesystem::file_size(tmp);
 
-		std::cout << path << " " << Human_readable(size_before - size_after) << " removed\n";
+		std::cout << path << " " << Human_readable(size_before - size_after) << " cleared\n";
 	}
 	else
 		std::cerr << path << " does not exists.\n";
@@ -60,33 +60,33 @@ int main()
 
 	// %LOCALAPPDATA%\D3DSCache
 	path.append(L"D3DSCache");
-	remove(path);
+	clear(path);
 
 	// %LOCALAPPDATA%\NVIDIA\DXCache
 	path.replace_filename(L"NVIDIA\\DXCache");
-	remove(path);
+	clear(path);
 
 	// %LOCALAPPDATA%\NVIDIA\GLCache
 	path.replace_filename(L"GLCache");
-	remove(path);
+	clear(path);
 
 	SHGetKnownFolderPath(FOLDERID_LocalAppDataLow, KF_FLAG_DEFAULT, nullptr, &known_folder_path);
 	path = std::move(known_folder_path);
 
 	// %APPDATA%\..\LocalLow\NVIDIA\PerDriverVersion\DXCache
 	path.append(L"NVIDIA\\PerDriverVersion\\DXCache");
-	remove(path);
+	clear(path);
 
 	// %APPDATA%\..\LocalLow\NVIDIA\PerDriverVersion\GLCache
 	path.replace_filename(L"GLCache");
-	remove(path);
+	clear(path);
 
 	SHGetKnownFolderPath(FOLDERID_RoamingAppData, KF_FLAG_DEFAULT, nullptr, &known_folder_path);
 	path = std::move(known_folder_path);
 
 	// %APPDATA%\..\Roaming\NVIDIA\ComputeCache
 	path.append(L"NVIDIA\\ComputeCache");
-	remove(path);
+	clear(path);
 
 	system("pause");
 	return 0;
